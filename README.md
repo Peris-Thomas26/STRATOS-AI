@@ -4,7 +4,6 @@ STRATOS AI is an AI-powered strategic intelligence and decision-support system f
 
 The project is designed to help management understand what is changing inside a company, what external developments matter, why they matter, and what decisions or investigations should be considered.
 
-This repository is being reset away from the earlier generic-news-brief prototype. The product direction is now centered on actual company data, evidence-based analysis, and structured intelligence workflows.
 
 ## Project vision
 
@@ -21,8 +20,6 @@ The primary internal information source is the Solstice Synthetic Enterprise Ope
 - Dataset: https://huggingface.co/datasets/solsticestudioai/synthetic-enterprise-ops-pack-sample
 - Coverage includes sales, customer accounts, engineering, incidents, IT operations, employee and organisational records, and internal collaboration data.
 - The system must use the actual dataset as the authoritative source of internal facts.
-- Do not invent or assume missing fields.
-- Preserve cross-departmental relationships and source provenance.
 
 ## System architecture
 
@@ -171,6 +168,5 @@ python main.py
 
 ## Notes
 
-- The project intentionally does not start from the earlier generic news-brief workflow.
 - The current implementation is a Phase 1 foundation for data provenance and structured company intelligence.
 - The repository is intentionally lean and reviewable so future analytical components can be added incrementally.
