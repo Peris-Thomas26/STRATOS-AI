@@ -1,64 +1,162 @@
 # STRATOS AI
 
-From information overload to actionable strategic intelligence.
+STRATOS AI is an AI-powered strategic intelligence and decision-support system for enterprise problem detection, internal business analysis, and external signal monitoring.
 
-STRATOS AI is an open-source, work-in-progress AI agent that helps small businesses and startup teams monitor their competitive environment. It collects public information, evaluates how developments may affect a company, tracks changes over time, and prepares a concise daily strategic briefing with supporting links.
+The project is designed to help management understand what is changing inside a company, what external developments matter, why they matter, and what decisions or investigations should be considered.
 
-## Project status
+This repository is being reset away from the earlier generic-news-brief prototype. The product direction is now centered on actual company data, evidence-based analysis, and structured intelligence workflows.
 
-Planning / pre-MVP. This repository contains the project skeleton and a thin working slice of the pipeline.
+## Project vision
 
-## Core intent
+STRATOS answers the question:
 
-STRATOS aims to answer:
+"Given the company's current internal performance, strategic objectives, and changing external environment, what developments require management's attention, why do they matter, and what actions should be considered?"
 
-- What changed in the market or competitive landscape?
-- Why does it matter to this company?
-- Is this new, developing, contradicted, or resolved?
-- What should the team investigate or consider next?
+This is not a chatbot, not a generic SWOT generator, and not a news summarizer. SWOT remains an analytical framework within the system, not the product itself.
 
-## Proposed MVP
+## Case study company
 
-1. Company profile and watchlist.
-2. Public-source monitoring.
-3. Normalization and deduplication.
-4. Relevance and evidence checks.
-5. Strategic analysis and briefing.
-6. Daily brief saved as Markdown.
+The primary internal information source is the Solstice Synthetic Enterprise Operations Pack dataset:
 
-## Suggested repository layout
+- Dataset: https://huggingface.co/datasets/solsticestudioai/synthetic-enterprise-ops-pack-sample
+- Coverage includes sales, customer accounts, engineering, incidents, IT operations, employee and organisational records, and internal collaboration data.
+- The system must use the actual dataset as the authoritative source of internal facts.
+- Do not invent or assume missing fields.
+- Preserve cross-departmental relationships and source provenance.
+
+## System architecture
+
+STRATOS is built around five major components:
+
+1. Company Knowledge Base
+   - central SQLite repository for Solstice records
+   - provenance tracking and ingestion timestamps
+   - reusable query layer for operational analysis
+
+2. Internal Business Intelligence
+   - department-based analysis using actual operational fields only
+   - SQL and Pandas for numerical and relational analysis
+
+3. External Intelligence Monitoring
+   - RSS and public data feeds for relevant external developments
+   - deduplication and source evidence tracking
+
+4. Strategic Impact Engine
+   - links internal evidence to external developments
+   - distinguishes facts, interpretations, assumptions, and hypotheses
+
+5. Strategic Memory and Decision Support
+   - historical signal tracking
+   - identifies new, unchanged, developing, contradicted, or resolved findings
+
+## Repository structure
 
 ```text
-stratos-ai/
-├── README.md
-├── .gitignore
-├── .env.example
-├── requirements.txt
+STRATOS-AI/
 ├── app.py
+├── main.py
+├── README.md
+├── requirements.txt
+├── .env.example
+├── .gitignore
 ├── config/
-│   └── sample_company.json
-├── collectors/
 │   ├── __init__.py
-│   └── normalize.py
-├── analysis/
+│   └── settings.py
+├── connectors/
 │   ├── __init__.py
-│   └── relevance.py
-├── memory/
+│   ├── solstice.py
+│   ├── news.py
+│   └── economic_data.py
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── synthetic/
+├── database/
 │   ├── __init__.py
-│   ├── database.py
-│   └── signals.py
+│   ├── schema.py
+│   └── queries.py
+├── intelligence/
+│   ├── __init__.py
+│   ├── internal_analysis.py
+│   ├── external_analysis.py
+│   ├── impact_engine.py
+│   └── strategic_memory.py
+├── agents/
+│   ├── __init__.py
+│   └── strategy_agent.py
 ├── reports/
 │   ├── __init__.py
-│   ├── briefing.py
-│   └── email.py
+│   └── briefing_generator.py
 ├── tests/
-│   └── test_pipeline.py
-├── examples/
-│   └── sample_briefing.md
-└── .github/
-    └── workflows/
-        └── daily.yml
+│   └── test_phase1_ingestion.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+└── pytest.ini
 ```
+
+## Phase 1: dataset exploration and integration
+
+This is the current milestone.
+
+### Goal
+
+Build a reliable company knowledge base using actual Solstice records and keep the evidence layer clean before introducing strategic reasoning.
+
+### Deliverables
+
+- live dataset discovery through Hugging Face
+- actual config and schema inspection
+- department-based dataset mapping
+- SQLite ingestion with provenance tracking
+- raw record storage and normalized record storage
+- reusable database query functions
+
+### Current implementation focus
+
+- Inspect all available Solstice dataset configs
+- Map each config to a department
+- Persist raw records and metadata
+- Preserve source identifiers and ingestion timestamps
+- Use deterministic code for validation and aggregation
+- Delay LLM-based interpretation until the evidence base is robust
+
+## Phase 2: internal intelligence
+
+After Phase 1 stabilizes, the project will add analytical modules for:
+
+- account health and retention risk
+- sales pipeline persistence
+- customer relationship movement
+- engineering and deployment issues
+- operational incident trends
+- cross-departmental dependencies
+
+These analyses will use actual dataset fields and SQL/Pandas rather than LLM-only reasoning.
+
+## Phase 3: external intelligence
+
+Once the internal foundation works, external monitoring will include:
+
+- RSS and public news sources
+- relevant public economic indicators
+- regulatory and industry signals
+- deduplication and source traceability
+
+## Phase 4 and beyond
+
+The later stages will connect internal evidence with external developments and build a strategic impact engine, memory layer, and management briefing workflow.
+
+## Engineering rules
+
+- Do not invent company records.
+- Preserve original identifiers and relationships.
+- Keep synthetic and real data distinguishable.
+- Do not treat LLM outputs as verified facts.
+- Use environment variables for credentials.
+- Prefer SQL and Pandas for quantitative analysis.
+- Keep the system modular and reviewable.
+- Avoid unnecessary frameworks or multi-agent orchestration until the workflow is truly complex.
 
 ## Getting started
 
@@ -68,32 +166,11 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 pytest -q
-python app.py
+python main.py
 ```
 
-The current implementation includes a thin end-to-end slice:
+## Notes
 
-- sample company profile
-- article normalization and deduplication
-- relevance scoring
-- Markdown briefing generation
-
-## Example brief output
-
-```md
-# Strategic Brief for Harbour Coffee
-
-## Summary
-One notable development was identified today.
-
-## Items
-- Harbour Coffee opens in Tsim Sha Tsui
-  - Source: The Coffee Post
-  - URL: https://example.com/harbour
-  - Why it matters: This indicates local expansion and increased competitive pressure.
-  - Suggested action: Review nearby demand and local pricing assumptions.
-```
-
-## Disclaimer
-
-This repository is an early prototype and does not replace professional business advice or verified market research.
+- The project intentionally does not start from the earlier generic news-brief workflow.
+- The current implementation is a Phase 1 foundation for data provenance and structured company intelligence.
+- The repository is intentionally lean and reviewable so future analytical components can be added incrementally.
